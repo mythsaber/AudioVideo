@@ -1,0 +1,28 @@
+#----------------AudioVideoCodingDecoding VS projrct-------------------
+*.db
+*.tlog
+AudioVideoCodingDecoding/x64/*
+AudioVideoCodingDecoding/Debug/*
+AudioVideoCodingDecoding/FfmepSdlTest/x64/*
+*.opendb
+.suo
+*.db
+#----------------AudioVideoCodingDecoding VS projrct-------------------
+
+
+#----------------VideoPlayerMFC-------------------
+VideoPlayerMFC/.VS/*
+VideoPlayerMFC/Debug/*
+VideoPlayerMFC/ipch/*
+VideoPlayerMFC/x64/*
+VideoPlayerMFC/VideoPlayerMFC/x64/*
+#----------------VideoPlayerMFC-------------------
+
+
+#----------------FfmpegSdlAudioPlayer------------------
+FfmpegSdlAudioPlayer/.VS/*
+FfmpegSdlAudioPlayer/Debug/*
+FfmpegSdlAudioPlayer/ipch/*
+FfmpegSdlAudioPlayer/x64/*
+FfmpegSdlAudioPlayer/FfmpegSdlAudioPlayer/x64/*
+#----------------FfmpegSdlAudioPlayer------------------
