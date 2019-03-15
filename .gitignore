@@ -1,4 +1,5 @@
 #----------------AudioVideoCodingDecoding VS projrct-------------------
+output_*
 *.db
 *.tlog
 AudioVideoCodingDecoding/x64/*

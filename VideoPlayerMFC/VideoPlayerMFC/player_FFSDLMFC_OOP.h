@@ -1,7 +1,4 @@
-//�������汾
-//�������ı�̣�OOP��Object Oriented Programming��
-
-extern "C"
+﻿extern "C"
 {
 #include<libavformat/avformat.h>
 #include<libavcodec/avcodec.h>
@@ -140,8 +137,6 @@ public:
 		avformat_close_input(&formatctx);
 	}
 	
-	//���ؽ�������һ֡��Ƶ�������ݣ�
-	//���δ������Ƶ���ݣ��򷵻ؿ�FrameDataYuv420p
 	FrameDataYuv420p next_frame()
 	{
 		while (1)
@@ -168,7 +163,6 @@ public:
 			int errorcode= avcodec_receive_frame(codecctx, frame);
 			if (errorcode== 0)
 			{
-				//avcodec_receive_frame���ܻ᷵��AVERROR(EAGAIN)����ʱ
 				//output is not available in this state - user must
 				//try to send new input
 				break;
@@ -201,7 +195,6 @@ public:
 		return fd;
 	}
 	
-	//���������ļ�������������
 	static void decode(const string& src_url, const string& dst_url)
 	{
 		std::ofstream ofs(dst_url,std::ios::binary);
@@ -267,7 +260,6 @@ private:
 		AVRational rt = formatctx->streams[videoidx]->avg_frame_rate;
 		fps = rt.num / rt.den;
 
-		//����һ��ƥ��codec_id�Ľ�����
 		AVCodec* codec = avcodec_find_decoder(codecpar->codec_id);
 		if (codec == NULL)
 		{
@@ -275,7 +267,6 @@ private:
 			exit(-1);
 		}
 
-		//�򿪽�����AVCodec
 		if (avcodec_open2(codecctx, codec, nullptr) < 0)
 		{
 			cout << "Couldn't open codec" << endl;
@@ -296,11 +287,7 @@ private:
 		av_image_fill_arrays(frameyuv->data, frameyuv->linesize, outbuffer,
 			dst_pixfmt, codecctx->width, codecctx->height, 1);
 
-<<<<<<< HEAD
-		packet = av_packet_alloc();	
-=======
-		packet = av_packet_alloc();
->>>>>>> av_packet_alloc() differ from (AVPacket*)av_malloc(sizeof(AVPacket))
+		packet = av_packet_alloc();// av_packet_alloc() differ from (AVPacket*)av_malloc(sizeof(AVPacket))
 		frame = av_frame_alloc();
 
 		cout << "VideoDecoder init Done" << endl;
@@ -350,16 +337,14 @@ public:
 		SDL_DestroyWindow(wind);
 		SDL_Quit();
 
-		//���SDL_Quit���ٴ�����SDL��Ƶ��Ⱦ�޻�������
 		dlg->GetDlgItem(IDC_SCREEN)->ShowWindow(SW_SHOWNORMAL);
 
-		//ȷ��refresh_video()�߳��Ƚ���
 		refresh_thd.join();
 	}
 	void imshow_frame(const FrameDataYuv420p& fd)
 	{
 		SDL_Event event;
-		SDL_WaitEvent(&event); //δ�ȵ�������������
+		SDL_WaitEvent(&event); 
 
 		while (event.type != REFRESH_USEREVENT
 			|| videostate == VSTATE_PAUSE)
@@ -368,7 +353,7 @@ public:
 			{
 				SDL_GetWindowSize(wind, &wind_w, &wind_h);
 			}
-			else if (event.type == SDL_QUIT)  //��������¼�
+			else if (event.type == SDL_QUIT) 
 			{
 				close_wind = true;
 				return;
@@ -425,7 +410,6 @@ public:
 			SDL_WaitEvent(&event);
 		}
 
-		//��ʱ��ΪREFRESH_USEREVENT�¼����ҷ�VSTATE_PAUSE״̬
 		if (videostate == VSTATE_NORMAL)
 		{
 			delaytime = normal_delay;
@@ -443,7 +427,6 @@ public:
 		rect.y = 0;
 		rect.w = wind_w;
 		rect.h = wind_h;
-		//SDL_UpdateTexture�ڶ���������Ϊ0�����������texture
 		SDL_UpdateTexture(texture, 0, &buffer[0], frame_width);
 		SDL_RenderClear(render);
 		SDL_RenderCopy(render, texture, 0, &rect);
@@ -465,7 +448,6 @@ public:
 			{
 				break;
 			}
-			//ѭ������
 			if (!ifs.read((char*)&buffer[0], buffer.size()))
 			{
 				ifs.clear();
@@ -492,14 +474,13 @@ private:
 			exit(-1);
 		}
 
-		//���Ŵ���
 		//wind_w = frame_width;
 		//wind_h = frame_height;
 		//wind = SDL_CreateWindow("Simplest video play sdl2",
 		//	SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		//	wind_w, wind_h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
-		CWnd *pWnd = dlg->GetDlgItem(IDC_SCREEN);//IDC_SCREENΪ�ؼ�ID
+		CWnd *pWnd = dlg->GetDlgItem(IDC_SCREEN);
 		wind = SDL_CreateWindowFrom(pWnd->GetSafeHwnd());
 		if (!wind) {
 			cout << "SDL: couldn't create window "
@@ -524,13 +505,13 @@ private:
 
 		cout << "SdlVideoPlayer init Done" << endl;
 	}
-	void refresh_video()//�̵߳���ں�����������int(void*)����
+	void refresh_video()
 	{
 		while (close_wind == false)
 		{
 			SDL_Event event;
 			event.type = REFRESH_USEREVENT;
-			SDL_PushEvent(&event); //���¼������������¼�
+			SDL_PushEvent(&event);
 			SDL_Delay(delaytime);
 		}
 	}
@@ -550,9 +531,9 @@ private:
 	SDL_Window* wind;
 	SDL_Renderer* render;
 	SDL_Texture* texture;
-	std::atomic<bool> close_wind;//�����Ƿ����
+	std::atomic<bool> close_wind;
 	VideoPlayState videostate;
-	bool space_down_state;//�ո���Ƿ��ڰ���״̬
+	bool space_down_state;
 	thread refresh_thd;
 };
 
@@ -575,47 +556,33 @@ public:
 		SdlVideoPlayer player(frame_width, frame_height, fps,
 			dlg);
 
-		//�����߳�
 		auto lam = [this, &player]()
 		{
 			FrameDataYuv420p data;
 			while (1)
 			{
-				//����������
 				if (player.get_close_wind()) break;
 
 				data = decoder.next_frame();
 				mydeque.push(data);
-
-				//�Ѿ��������������ݣ����Ϳ�FrameDataYuv420p��Ϊ����֡��־
 				if (data.empty()) break;
 			}
 		};
 		thread t(lam);
 
-		//���ų����ܷ������߳���
 		FrameDataYuv420p dataget;
 		while (1)
 		{
-			//����������
 			if (player.get_close_wind())
 			{
 				mydeque.try_to_pop();
 				break;
-				//���˳�ѭ��֮ǰ����try_to_pop()���ý����̼߳���һ��ѭ��
-				//�������bug����ͣʱ���ڣ�һֱ���룬��Ž������ݵĶ�������
-				//��ʱ������ڣ����½����߳��޷�����ѭ��
-				//�����if (player.get_close_wind())
 			}
 
 			std::shared_ptr<FrameDataYuv420p> dataget;
 			dataget= mydeque.pop();
 
-<<<<<<< HEAD
-			//���δ�������������ݣ�˵����Ƶ�Բ������
-=======
-			//���δ�������������ݣ�˵����Ƶ�Ѳ������
->>>>>>> av_packet_alloc() differ from (AVPacket*)av_malloc(sizeof(AVPacket))
+			//如果未读到解码后的数据，说明视频已播放完毕
 			if (dataget->empty())
 			{
 				player.set_close_wind(true);
@@ -635,11 +602,3 @@ private:
 	int fps;
 	const CVideoPlayerMFCDlg* dlg;
 };
-
-//int main(int argc,char* argv[])
-//{
-//	DecoderPlayer dp("���鼧_178s_640x360.mp4");
-//	dp.decode_play();
-//
-//	return 0;
-//}

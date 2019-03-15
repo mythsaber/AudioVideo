@@ -1,5 +1,5 @@
-
-// VideoPlayerMFCDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿
+// VideoPlayerMFCDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -13,22 +13,22 @@
 
 #include "player_FFSDLMFC_OOP.h"
 
-// ÓÃÓÚÓ¦ÓÃ³ÌĞò¡°¹ØÓÚ¡±²Ëµ¥ÏîµÄ CAboutDlg ¶Ô»°¿ò
+// ç”¨äºåº”ç”¨ç¨‹åºâ€œå…³äºâ€èœå•é¡¹çš„ CAboutDlg å¯¹è¯æ¡†
 
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
-// ÊµÏÖ
+// å®ç°
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -46,7 +46,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CVideoPlayerMFCDlg ¶Ô»°¿ò
+// CVideoPlayerMFCDlg å¯¹è¯æ¡†
 
 
 
@@ -76,15 +76,15 @@ BEGIN_MESSAGE_MAP(CVideoPlayerMFCDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CVideoPlayerMFCDlg ÏûÏ¢´¦Àí³ÌĞò
+// CVideoPlayerMFCDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 BOOL CVideoPlayerMFCDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ½«¡°¹ØÓÚ...¡±²Ëµ¥ÏîÌí¼Óµ½ÏµÍ³²Ëµ¥ÖĞ¡£
+	// å°†â€œå…³äº...â€èœå•é¡¹æ·»åŠ åˆ°ç³»ç»Ÿèœå•ä¸­ã€‚
 
-	// IDM_ABOUTBOX ±ØĞëÔÚÏµÍ³ÃüÁî·¶Î§ÄÚ¡£
+	// IDM_ABOUTBOX å¿…é¡»åœ¨ç³»ç»Ÿå‘½ä»¤èŒƒå›´å†…ã€‚
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -102,15 +102,15 @@ BOOL CVideoPlayerMFCDlg::OnInitDialog()
 		}
 	}
 
-	// ÉèÖÃ´Ë¶Ô»°¿òµÄÍ¼±ê¡£  µ±Ó¦ÓÃ³ÌĞòÖ÷´°¿Ú²»ÊÇ¶Ô»°¿òÊ±£¬¿ò¼Ü½«×Ô¶¯
-	//  Ö´ĞĞ´Ë²Ù×÷
-	SetIcon(m_hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(m_hIcon, FALSE);		// ÉèÖÃĞ¡Í¼±ê
+	// è®¾ç½®æ­¤å¯¹è¯æ¡†çš„å›¾æ ‡ã€‚  å½“åº”ç”¨ç¨‹åºä¸»çª—å£ä¸æ˜¯å¯¹è¯æ¡†æ—¶ï¼Œæ¡†æ¶å°†è‡ªåŠ¨
+	//  æ‰§è¡Œæ­¤æ“ä½œ
+	SetIcon(m_hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(m_hIcon, FALSE);		// è®¾ç½®å°å›¾æ ‡
 
-	//´æ´¢µØÖ·À¸µØÖ·ÖÁÓ²ÅÌÎÄ¼ş
+	//å­˜å‚¨åœ°å€æ åœ°å€è‡³ç¡¬ç›˜æ–‡ä»¶
 	std::ifstream ifs("My_CVideoPlayerMFCDlg_Config.txt");
 	if (!ifs) {
-		AfxMessageBox(L"²»ÄÜ´ò¿ªÅäÖÃÎÄ¼ş");
+		AfxMessageBox(L"ä¸èƒ½æ‰“å¼€é…ç½®æ–‡ä»¶");
 		return false;
 	}
 	string str;
@@ -119,7 +119,7 @@ BOOL CVideoPlayerMFCDlg::OnInitDialog()
 	cstr_path.Format(_T("%s"), CStringW(str.c_str()));
 	m_url.SetWindowTextW(cstr_path);
 
-	//ĞŞ¸ÄµØÖ·À¸×ÖÌå´óĞ¡
+	//ä¿®æ”¹åœ°å€æ å­—ä½“å¤§å°
 	CFont* src_font = m_url.GetFont();
 	LOGFONT dst;
 	src_font->GetLogFont(&dst);
@@ -127,7 +127,7 @@ BOOL CVideoPlayerMFCDlg::OnInitDialog()
 	m_Font.CreateFontIndirectW(&dst);
 	m_url.SetFont(&m_Font);
 
-	return TRUE;  // ³ı·Ç½«½¹µãÉèÖÃµ½¿Ø¼ş£¬·ñÔò·µ»Ø TRUE
+	return TRUE;  // é™¤éå°†ç„¦ç‚¹è®¾ç½®åˆ°æ§ä»¶ï¼Œå¦åˆ™è¿”å› TRUE
 }
 
 void CVideoPlayerMFCDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -141,7 +141,7 @@ void CVideoPlayerMFCDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	{
 		std::ofstream ofs("My_CVideoPlayerMFCDlg_Config.txt");
 		if (!ofs) {
-			AfxMessageBox(L"²»ÄÜÕıÈ·±£´æÅäÖÃÎÄ¼ş");
+			AfxMessageBox(L"ä¸èƒ½æ­£ç¡®ä¿å­˜é…ç½®æ–‡ä»¶");
 			return;
 		}
 		CString src_path;
@@ -158,19 +158,19 @@ void CVideoPlayerMFCDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// Èç¹ûÏò¶Ô»°¿òÌí¼Ó×îĞ¡»¯°´Å¥£¬ÔòĞèÒªÏÂÃæµÄ´úÂë
-//  À´»æÖÆ¸ÃÍ¼±ê¡£  ¶ÔÓÚÊ¹ÓÃÎÄµµ/ÊÓÍ¼Ä£ĞÍµÄ MFC Ó¦ÓÃ³ÌĞò£¬
-//  Õâ½«ÓÉ¿ò¼Ü×Ô¶¯Íê³É¡£
+// å¦‚æœå‘å¯¹è¯æ¡†æ·»åŠ æœ€å°åŒ–æŒ‰é’®ï¼Œåˆ™éœ€è¦ä¸‹é¢çš„ä»£ç 
+//  æ¥ç»˜åˆ¶è¯¥å›¾æ ‡ã€‚  å¯¹äºä½¿ç”¨æ–‡æ¡£/è§†å›¾æ¨¡å‹çš„ MFC åº”ç”¨ç¨‹åºï¼Œ
+//  è¿™å°†ç”±æ¡†æ¶è‡ªåŠ¨å®Œæˆã€‚
 
 void CVideoPlayerMFCDlg::OnPaint()
 {
 	if (IsIconic())
 	{
-		CPaintDC dc(this); // ÓÃÓÚ»æÖÆµÄÉè±¸ÉÏÏÂÎÄ
+		CPaintDC dc(this); // ç”¨äºç»˜åˆ¶çš„è®¾å¤‡ä¸Šä¸‹æ–‡
 
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// Ê¹Í¼±êÔÚ¹¤×÷Çø¾ØĞÎÖĞ¾ÓÖĞ
+		// ä½¿å›¾æ ‡åœ¨å·¥ä½œåŒºçŸ©å½¢ä¸­å±…ä¸­
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
@@ -178,7 +178,7 @@ void CVideoPlayerMFCDlg::OnPaint()
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// »æÖÆÍ¼±ê
+		// ç»˜åˆ¶å›¾æ ‡
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
@@ -187,8 +187,8 @@ void CVideoPlayerMFCDlg::OnPaint()
 	}
 }
 
-//µ±ÓÃ»§ÍÏ¶¯×îĞ¡»¯´°¿ÚÊ±ÏµÍ³µ÷ÓÃ´Ëº¯ÊıÈ¡µÃ¹â±ê
-//ÏÔÊ¾¡£
+//å½“ç”¨æˆ·æ‹–åŠ¨æœ€å°åŒ–çª—å£æ—¶ç³»ç»Ÿè°ƒç”¨æ­¤å‡½æ•°å–å¾—å…‰æ ‡
+//æ˜¾ç¤ºã€‚
 HCURSOR CVideoPlayerMFCDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
@@ -197,7 +197,7 @@ HCURSOR CVideoPlayerMFCDlg::OnQueryDragIcon()
 
 void CVideoPlayerMFCDlg::OnBnClickedPlay()
 {
-	//Èç¹ûÒÑÓĞÊÓÆµÔÚ²¥·Å£¬Ôò²»´¦Àí
+	//å¦‚æœå·²æœ‰è§†é¢‘åœ¨æ’­æ”¾ï¼Œåˆ™ä¸å¤„ç†
 	if ((bool)videoon == true) return;
 
 	videoon = true;
@@ -210,7 +210,7 @@ void CVideoPlayerMFCDlg::OnBnClickedPlay()
 	std::ifstream ifs(path);
 	if (!ifs) 
 	{ 
-		AfxMessageBox(L"ÎÄ¼ş²»ÄÜ´ò¿ª"); 
+		AfxMessageBox(L"æ–‡ä»¶ä¸èƒ½æ‰“å¼€"); 
 		videoon = false;
 		m_url.SetReadOnly(false);
 		return;
@@ -222,7 +222,7 @@ void CVideoPlayerMFCDlg::OnBnClickedPlay()
 
 	auto lam = [this](const string& path, const CVideoPlayerMFCDlg* dlg)
 	{
-		//Çå¿ÕÊÂ¼ş¶ÓÁĞÖĞµÄËùÓĞÏûÏ¢
+		//æ¸…ç©ºäº‹ä»¶é˜Ÿåˆ—ä¸­çš„æ‰€æœ‰æ¶ˆæ¯
 		SDL_Event event;
 		while (SDL_PollEvent(&event));
 
@@ -234,7 +234,7 @@ void CVideoPlayerMFCDlg::OnBnClickedPlay()
 	};
 
 	thread t(lam,path,this); 
-	//±ØĞëÆô¶¯Ò»¸öĞÂÏß³Ì²¥·Å£¬²»ÄÜÖ±½ÓÔÚµ±Ç°Ïß³Ì²¥·Å 
+	//å¿…é¡»å¯åŠ¨ä¸€ä¸ªæ–°çº¿ç¨‹æ’­æ”¾ï¼Œä¸èƒ½ç›´æ¥åœ¨å½“å‰çº¿ç¨‹æ’­æ”¾ 
 	t.detach();
 }
 
@@ -243,13 +243,13 @@ void CVideoPlayerMFCDlg::OnBnClickedPause()
 {
 	if ((bool)videoon == false) return;
 
-	// °´ÏÂ¿Õ¸ñ¼ü
+	// æŒ‰ä¸‹ç©ºæ ¼é”®
 	SDL_Event event;
 	event.type = SDL_KEYDOWN;
 	event.key.keysym.sym = ' ';
-	SDL_PushEvent(&event); //ÏòÊÂ¼ş¶ÓÁĞÌí¼ÓĞÂÊÂ¼ş
+	SDL_PushEvent(&event); //å‘äº‹ä»¶é˜Ÿåˆ—æ·»åŠ æ–°äº‹ä»¶
 
-	//Ì§Æğ¿Õ¸ñ¼ü
+	//æŠ¬èµ·ç©ºæ ¼é”®
 	event.type = SDL_KEYUP;
 	SDL_PushEvent(&event);
 }
@@ -257,7 +257,7 @@ void CVideoPlayerMFCDlg::OnBnClickedPause()
 
 void CVideoPlayerMFCDlg::OnBnClickedStop()
 {
-	if (videoon == false) return; //atomÓĞ×ª»»ÎªTÀàĞÍµÄº¯Êı
+	if (videoon == false) return; //atomæœ‰è½¬æ¢ä¸ºTç±»å‹çš„å‡½æ•°
 
 	SDL_Event event;
 	event.type = SDL_QUIT;
@@ -267,13 +267,13 @@ void CVideoPlayerMFCDlg::OnBnClickedStop()
 
 void CVideoPlayerMFCDlg::OnBnClickedAbout()
 {
-	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO: åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 	CAboutDlg dlg;
 	dlg.DoModal(); 
-	//"Modal"±íÊ¾CAboutDlgÊÇÒ»¸öÄ£Ê½¶Ô»°¿ò£¬
-	//¼´µ¯³öºó£¬´°¿ÚÆäËûÎ»ÖÃ²»ÄÜÔÚ½ÓÊÕÏìÓ¦£¬
-	//³ı·ÇÈ·¶¨¡¢²æµôºó£¬²Å¿ÉÒÔÔÙµã»÷³¨¿ÚÆäËû
-	//Î»ÖÃ
+	//"Modal"è¡¨ç¤ºCAboutDlgæ˜¯ä¸€ä¸ªæ¨¡å¼å¯¹è¯æ¡†ï¼Œ
+	//å³å¼¹å‡ºåï¼Œçª—å£å…¶ä»–ä½ç½®ä¸èƒ½åœ¨æ¥æ”¶å“åº”ï¼Œ
+	//é™¤éç¡®å®šã€å‰æ‰åï¼Œæ‰å¯ä»¥å†ç‚¹å‡»æ•å£å…¶ä»–
+	//ä½ç½®
 }
 
 
@@ -282,7 +282,7 @@ void CVideoPlayerMFCDlg::OnBnClickedBroswer()
 	if ((bool)videoon == true) return;
 
 	CString path;
-	//TRUEÎªopen¶Ô»°¿ò£¬FALSEÎªsave as¶Ô»°¿ò
+	//TRUEä¸ºopenå¯¹è¯æ¡†ï¼ŒFALSEä¸ºsave aså¯¹è¯æ¡†
 	CFileDialog dlg(TRUE);
 	if (dlg.DoModal() == IDOK)
 	{
@@ -294,16 +294,16 @@ void CVideoPlayerMFCDlg::OnBnClickedBroswer()
 
 void CVideoPlayerMFCDlg::OnStnClickedScreen()
 {
-	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO: åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 }
 
 
 void CVideoPlayerMFCDlg::OnEnChangeUrl()
 {
-	// TODO:  Èç¹û¸Ã¿Ø¼şÊÇ RICHEDIT ¿Ø¼ş£¬Ëü½«²»
-	// ·¢ËÍ´ËÍ¨Öª£¬³ı·ÇÖØĞ´ CDialogEx::OnInitDialog()
-	// º¯Êı²¢µ÷ÓÃ CRichEditCtrl().SetEventMask()£¬
-	// Í¬Ê±½« ENM_CHANGE ±êÖ¾¡°»ò¡±ÔËËãµ½ÑÚÂëÖĞ¡£
+	// TODO:  å¦‚æœè¯¥æ§ä»¶æ˜¯ RICHEDIT æ§ä»¶ï¼Œå®ƒå°†ä¸
+	// å‘é€æ­¤é€šçŸ¥ï¼Œé™¤éé‡å†™ CDialogEx::OnInitDialog()
+	// å‡½æ•°å¹¶è°ƒç”¨ CRichEditCtrl().SetEventMask()ï¼Œ
+	// åŒæ—¶å°† ENM_CHANGE æ ‡å¿—â€œæˆ–â€è¿ç®—åˆ°æ©ç ä¸­ã€‚
 
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 }

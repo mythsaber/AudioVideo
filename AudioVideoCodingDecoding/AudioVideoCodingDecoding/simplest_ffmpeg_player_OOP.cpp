@@ -1,7 +1,4 @@
-//�������汾
-//�������ı�̣�OOP��Object Oriented Programming��
-
-extern "C"
+﻿extern "C"
 {
 #include<libavformat/avformat.h>
 #include<libavcodec/avcodec.h>
@@ -133,15 +130,13 @@ public:
 	{
 		av_free(outbuffer);
 		sws_freeContext(swsctx);
-		av_packet_free(&packet); //�ȼ���av_packet_unref(packet)+av_freep(packet)
+		av_packet_free(&packet); //等价于av_packet_unref(packet)+av_freep(packet)
 		av_frame_free(&frameyuv);
 		av_frame_free(&frame);
 		avcodec_close(codecctx);
 		avformat_close_input(&formatctx);
 	}
 	
-	//���ؽ�������һ֡��Ƶ�������ݣ�
-	//���δ������Ƶ���ݣ��򷵻ؿ�FrameDataYuv420p
 	FrameDataYuv420p next_frame()
 	{
 		while (1)
@@ -172,7 +167,6 @@ public:
 			}
 			else if (errorcode == AVERROR(EAGAIN))
 			{
-				//avcodec_receive_frame���ܻ᷵��AVERROR(EAGAIN)����ʱ
 				//output is not available in this state - user must
 				//try to send new input
 				continue;
@@ -201,7 +195,6 @@ public:
 		return fd;
 	}
 	
-	//���������ļ�������������
 	static void decode(const string& src_url, const string& dst_url)
 	{
 		std::ofstream ofs(dst_url,std::ios::binary);
@@ -267,7 +260,6 @@ private:
 		AVRational rt = formatctx->streams[videoidx]->avg_frame_rate;
 		fps = rt.num / rt.den;
 
-		//����һ��ƥ��codec_id�Ľ�����
 		AVCodec* codec = avcodec_find_decoder(codecpar->codec_id);
 		if (codec == NULL)
 		{
@@ -275,7 +267,6 @@ private:
 			exit(-1);
 		}
 
-		//�򿪽�����AVCodec
 		if (avcodec_open2(codecctx, codec, nullptr) < 0)
 		{
 			cout << "Couldn't open codec" << endl;
@@ -350,7 +341,7 @@ public:
 	void imshow_frame(const FrameDataYuv420p& fd)
 	{
 		SDL_Event event;
-		SDL_WaitEvent(&event); //δ�ȵ�������������
+		SDL_WaitEvent(&event); 
 
 		while (event.type != REFRESH_USEREVENT
 			|| videostate == VSTATE_PAUSE)
@@ -359,7 +350,7 @@ public:
 			{
 				SDL_GetWindowSize(wind, &wind_w, &wind_h);
 			}
-			else if (event.type == SDL_QUIT)  //��������¼�
+			else if (event.type == SDL_QUIT) 
 			{
 				close_wind = true;
 				return;
@@ -416,7 +407,6 @@ public:
 			SDL_WaitEvent(&event);
 		}
 
-		//��ʱ��ΪREFRESH_USEREVENT�¼����ҷ�VSTATE_PAUSE״̬
 		if (videostate == VSTATE_NORMAL)
 		{
 			delaytime = normal_delay;
@@ -434,7 +424,6 @@ public:
 		rect.y = 0;
 		rect.w = wind_w;
 		rect.h = wind_h;
-		//SDL_UpdateTexture�ڶ���������Ϊ0�����������texture
 		SDL_UpdateTexture(texture, 0, &buffer[0], frame_width);
 		SDL_RenderClear(render);
 		SDL_RenderCopy(render, texture, 0, &rect);
@@ -456,7 +445,7 @@ public:
 			{
 				break;
 			}
-			//ѭ������
+
 			if (!ifs.read((char*)&buffer[0], buffer.size()))
 			{
 				ifs.clear();
@@ -483,7 +472,6 @@ private:
 			exit(-1);
 		}
 
-		//���Ŵ���
 		wind_w = frame_width;
 		wind_h = frame_height;
 
@@ -496,7 +484,6 @@ private:
 			exit(-1);
 		}
 
-		//���SDL_Quit���ٴ�����SDL��Ƶ��Ⱦ�޻�������
 		SDL_ShowWindow(wind);
 
 		render = SDL_CreateRenderer(wind, -1, 0);
@@ -509,16 +496,13 @@ private:
 
 		cout << "SdlVideoPlayer init Done" << endl;
 	}
-	void refresh_video()//�̵߳���ں�����������int(void*)����
+	void refresh_video()
 	{
-		//������*this��������ǰ�����close_wind������*this
-		//�������ٺ�close_wind�������٣���ʱ�ٶ�ȡclose_wind��
-		//���´���
 		while (close_wind == false)
 		{
 			SDL_Event event;
 			event.type = REFRESH_USEREVENT;
-			SDL_PushEvent(&event); //���¼������������¼�
+			SDL_PushEvent(&event);
 			SDL_Delay(delaytime);
 		}
 	}
@@ -537,9 +521,9 @@ private:
 	SDL_Window* wind;
 	SDL_Renderer* render;
 	SDL_Texture* texture;
-	std::atomic<bool> close_wind;//�����Ƿ����
+	std::atomic<bool> close_wind;
 	VideoPlayState videostate;
-	bool space_down_state;//�ո���Ƿ��ڰ���״̬
+	bool space_down_state;
 	thread refresh_thd;
 };
 
@@ -558,46 +542,33 @@ public:
 	{
 		SdlVideoPlayer player(frame_width, frame_height, fps);
 
-		//�����߳�
 		auto lam = [this,&player]()
 		{
 			FrameDataYuv420p data;
 			while (1)
 			{
-				//����������
 				if (player.get_close_wind()) break;
-				//���ܲ����߳�дclose_wind��ͬʱ�������̶߳�close_wind
-				//C++�ж���̶߳�ͬһ������ͬʱ��д��δ������Ϊ������
-				//ʹ��atomic
 
 				data = decoder.next_frame();
 				mydeque.push(data);
 
-				//�Ѿ��������������ݣ����Ϳ�FrameDataYuv420p��Ϊ����֡��־
 				if (data.empty()) break;
 			}
 		};
 		thread t(lam);
 
-		//���ų����ܷ������߳���
 		FrameDataYuv420p dataget;
 		while (1)
 		{
-			//����������
 			if (player.get_close_wind())
 			{
 				mydeque.try_to_pop();
 				break;
-				//���˳�ѭ��֮ǰ����try_to_pop()���ý����̼߳���һ��ѭ��
-				//�������bug����ͣʱ���ڣ�һֱ���룬��Ž������ݵĶ�������
-				//��ʱ������ڣ����½����߳��޷�����ѭ��
-				//�����if (player.get_close_wind())
 			}
 
 			std::shared_ptr<FrameDataYuv420p> dataget;
 			dataget= mydeque.pop();
 
-			//���δ�������������ݣ�˵����Ƶ�Բ������
 			if (dataget->empty())
 			{
 				player.set_close_wind(true);
@@ -619,14 +590,7 @@ private:
 
 int main(int argc,char* argv[])
 {
-	//const char* srcpath = "��ľ��_640x360.mp4";
-	//const char* dstpath = "output_��ľ��_640x360_yuv420p.yuv";
-	//VideoDecoder::decode(srcpath,dstpath);
-
-	//SdlVideoPlayer::play_yuv420p("��ľ��640x360.yuv",640,360);
-
-	//DecoderPlayer dp("���鼧_178s_640x360.mp4");
-	DecoderPlayer dp("��ľ��_640x360.mp4");
+	DecoderPlayer dp("端木蓉_640x360.mp4");
 	dp.decode_play();
 
 	return 0;
