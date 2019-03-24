@@ -18,9 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="sdl_window.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3586CDB6-80C8-4D2D-82AE-78815DB06D6C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
