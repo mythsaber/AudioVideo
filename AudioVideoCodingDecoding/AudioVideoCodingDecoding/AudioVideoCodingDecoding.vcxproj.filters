@@ -18,8 +18,5 @@
     <ClCompile Include="pcm_cvt_aac.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="pcm_cvt_acc_old.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

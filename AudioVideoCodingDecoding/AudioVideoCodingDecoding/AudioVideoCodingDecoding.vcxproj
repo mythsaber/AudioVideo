@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pcm_cvt_aac.cpp" />
-    <ClCompile Include="pcm_cvt_acc_old.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EB18574F-917C-41B7-9441-55371823B8F5}</ProjectGuid>

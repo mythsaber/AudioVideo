@@ -99,8 +99,6 @@ int convert_pcm2aac(const string& filename_in, const string& filename_out)
 	pcodecctx->sample_rate = input_sample_rate;
 	pcodecctx->channel_layout = input_channel_layout;
 	pcodecctx->channels =input_channels;
-	//不设置，则bit_rate默认为0。why need to set？ how to set?
-	pcodecctx->bit_rate = 128000; 
 	
 	//avcodec_open2会赋值pcodecctx->frame_size
 	//除最后一帧外，提交给编码器的大小必须与该值相同
@@ -185,7 +183,7 @@ int convert_pcm2aac(const string& filename_in, const string& filename_out)
 	//由于swr_convert具有缓冲功能，因此输入缓冲区的大小可随意设置
 	vector<uint8_t> input_buf(1024); //读pcm文件数据至此处，也即swr_convert()的输入
 	int in_samples = (int)input_buf.size() / av_get_bytes_per_sample(input_sample_fmt) /
-		input_channels;//1024, input_buf缓冲区能容纳每个信道的采样点数
+		input_channels;//input_buf缓冲区能容纳每个信道的采样点数
 	int framecnt = 0;	
 	int output_space_offset = 0;//用单通道样点数衡量
 	int group_num = 0;
@@ -358,7 +356,7 @@ int convert_pcm2aac(const string& filename_in, const string& filename_out)
 		swr_free(&pswrctx);
 		return -1;
 	}
-	//循环avcodec_receive_packet直至编码器要求输入新的frame
+	//循环avcodec_receive_packet直至编码器被完全刷新，没有更多输出
 	while (1)
 	{
 		av_init_packet(&pkt);
