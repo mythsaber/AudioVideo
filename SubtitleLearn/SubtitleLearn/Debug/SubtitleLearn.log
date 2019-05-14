@@ -1,0 +1,30 @@
+﻿  extract_subtitle.cpp
+d:\ffmpeg-dev\include\libavutil\rational.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+e:\github\audiovideo\subtitlelearn\subtitlelearn\extract_subtitle.cpp(130): warning C4244: “初始化”: 从“double”转换到“int64_t”，可能丢失数据
+e:\github\audiovideo\subtitlelearn\subtitlelearn\extract_subtitle.cpp(151): warning C4244: “初始化”: 从“double”转换到“int64_t”，可能丢失数据
+e:\github\audiovideo\subtitlelearn\subtitlelearn\extract_subtitle.cpp(154): warning C4244: “初始化”: 从“double”转换到“int64_t”，可能丢失数据
+e:\github\audiovideo\subtitlelearn\subtitlelearn\extract_subtitle.cpp(157): warning C4244: “初始化”: 从“double”转换到“int64_t”，可能丢失数据
+e:\github\audiovideo\subtitlelearn\subtitlelearn\extract_subtitle.cpp(184): warning C4018: “<”: 有符号/无符号不匹配
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avcodec_alloc_context3，该符号在函数 "public: __thiscall Subtitle::Subtitle(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Subtitle@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avcodec_parameters_to_context，该符号在函数 "public: __thiscall Subtitle::Subtitle(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Subtitle@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avcodec_open2，该符号在函数 "public: __thiscall Subtitle::Subtitle(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Subtitle@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avcodec_close，该符号在函数 "public: __thiscall Subtitle::~Subtitle(void)" (??1Subtitle@@QAE@XZ) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avsubtitle_free，该符号在函数 "public: int __thiscall Subtitle::save(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?save@Subtitle@@QAEHABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _av_init_packet，该符号在函数 "public: int __thiscall Subtitle::save(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?save@Subtitle@@QAEHABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _av_packet_unref，该符号在函数 "public: int __thiscall Subtitle::save(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?save@Subtitle@@QAEHABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avcodec_find_decoder，该符号在函数 "public: __thiscall Subtitle::Subtitle(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Subtitle@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avcodec_decode_subtitle2，该符号在函数 "public: int __thiscall Subtitle::save(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?save@Subtitle@@QAEHABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avformat_alloc_context，该符号在函数 "public: __thiscall Subtitle::Subtitle(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Subtitle@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avformat_open_input，该符号在函数 "public: __thiscall Subtitle::Subtitle(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Subtitle@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avformat_find_stream_info，该符号在函数 "public: __thiscall Subtitle::Subtitle(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Subtitle@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _av_read_frame，该符号在函数 "public: int __thiscall Subtitle::save(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?save@Subtitle@@QAEHABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z) 中被引用
+extract_subtitle.obj : error LNK2019: 无法解析的外部符号 _avformat_close_input，该符号在函数 "public: __thiscall Subtitle::~Subtitle(void)" (??1Subtitle@@QAE@XZ) 中被引用
+D:\ffmpeg-dev\lib\avcodec.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“X86”冲突
+D:\ffmpeg-dev\lib\avdevice.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“X86”冲突
+D:\ffmpeg-dev\lib\avfilter.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“X86”冲突
+D:\ffmpeg-dev\lib\avformat.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“X86”冲突
+D:\ffmpeg-dev\lib\avutil.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“X86”冲突
+D:\ffmpeg-dev\lib\postproc.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“X86”冲突
+D:\ffmpeg-dev\lib\swresample.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“X86”冲突
+D:\ffmpeg-dev\lib\swscale.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“X86”冲突
+E:\GitHub\AudioVideo\SubtitleLearn\Debug\SubtitleLearn.exe : fatal error LNK1120: 14 个无法解析的外部命令
