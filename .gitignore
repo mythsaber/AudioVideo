@@ -1,13 +1,15 @@
-#----------------AudioVideoCodingDecoding VS projrct-------------------
+#----------------common-------------------
 output_*
 *.db
 *.tlog
+*.opendb
+.suo
+#----------------common-------------------
+
+#----------------AudioVideoCodingDecoding VS projrct-------------------
 AudioVideoCodingDecoding/x64/*
 AudioVideoCodingDecoding/Debug/*
 AudioVideoCodingDecoding/FfmepSdlTest/x64/*
-*.opendb
-.suo
-*.db
 #----------------AudioVideoCodingDecoding VS projrct-------------------
 
 
@@ -27,3 +29,12 @@ FfmpegSdlAudioPlayer/ipch/*
 FfmpegSdlAudioPlayer/x64/*
 FfmpegSdlAudioPlayer/FfmpegSdlAudioPlayer/x64/*
 #----------------FfmpegSdlAudioPlayer------------------
+
+#----------------SubtitleLearn------------------
+SubtitleLearn/.VS/*
+SubtitleLearn/Debug/*
+SubtitleLearn/ipch/*
+SubtitleLearn/x64/*
+SubtitleLearn/SubtitleLearn/x64/*
+SubtitleLearn/SubtitleLearn/*.mkv
+#----------------SubtitleLearn------------------

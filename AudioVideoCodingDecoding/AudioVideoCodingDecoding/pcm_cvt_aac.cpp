@@ -93,7 +93,7 @@ int convert_pcm2aac(const string& filename_in, const string& filename_out)
 	pcodecctx->codec_id = codec_id;//设置用于编码的avcodec的一些参数
 	pcodecctx->codec_type = AVMEDIA_TYPE_AUDIO;
 	pcodecctx->sample_fmt = pcodec->sample_fmts[0];
-	//AVCodec的sample_fmts成员是array of supported sample formats, 
+	//sample_fmts是AVCodec的array of supported sample formats, 
 	//or NULL if unknown, array is terminated by -1
 	//实际上AAC编码器仅支持一种采样格式，即AV_SAMPLE_FMT_FLTP (8)
 	pcodecctx->sample_rate = input_sample_rate;
@@ -199,7 +199,7 @@ int convert_pcm2aac(const string& filename_in, const string& filename_out)
 		ifs.read((char*)&input_buf[0], input_buf.size());
 		if ((int)ifs.gcount() < input_buf.size())
 		{
-			in_samples = (int)input_buf.size() / av_get_bytes_per_sample(input_sample_fmt) /
+			in_samples = (int)ifs.gcount() / av_get_bytes_per_sample(input_sample_fmt) /
 				input_channels; 
 		}
 		//必须有const，否则无法将参数从“uint8_t **”转换为“const uint8_t **”
@@ -326,7 +326,7 @@ int convert_pcm2aac(const string& filename_in, const string& filename_out)
 
 				//处理缓存在swr中的输入数据
 				output_space_offset = 0;
-				available_output_space = pframe->nb_samples - output_space_offset;
+				available_output_space = pframe->nb_samples;
 				for (int i = 0; i < group_num; i++)
 				{
 					cur_convert_data_pos[i] = convert_data[i] +
