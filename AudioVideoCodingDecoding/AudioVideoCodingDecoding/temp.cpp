@@ -14,10 +14,10 @@ int main()
 	AVRational a = {2,3};
 	AVRational b = { 1,2 };
 	cout << av_q2d(a) << endl; //0.666667
-	show(av_add_q(a,b));  //7/6
-	show(av_sub_q(a, b)); //1/6
-	show(av_mul_q(a, b)); //1/3
-	show(av_div_q(a, b)); //1/4
+	show(av_add_q(a,b));  // (7 / 6)
+	show(av_sub_q(a, b)); // (1 / 6)
+	show(av_mul_q(a, b)); // (1 / 3)
+	show(av_div_q(a, b)); // (4 / 3)
 
 
 	const char* url = "¶ËÄ¾ÈØ.mp4";
