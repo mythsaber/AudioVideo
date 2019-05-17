@@ -150,9 +150,14 @@ private:
 		int64_t sub_duration = sub->end_display_time;
 
 		uint8_t * subtitle_out = (uint8_t*)av_mallocz(subtitle_out_max_size);
+		//subtitle.rects[0]->ass中已经包含字幕时间戳信息
+		//subtitle.rects[0]->ass为：Dialogue: 0,0:00:29.75,0:00:31.78,Default,,0,0,0,,在古老的时代
+		//编码后subtitle_out为："在古老的时代"
 		int subtitle_out_size = avcodec_encode_subtitle(encctx , subtitle_out,
 			subtitle_out_max_size, sub);
 
+		//无论编码还是解码，AVPacket::data中都无时间戳信息
+		//字幕的时间戳信息包含在AVPacket::pts、AVPacket::duration、AVPacket::dts
 		AVPacket pkt;
 		av_init_packet(&pkt);
 		pkt.data = subtitle_out;
