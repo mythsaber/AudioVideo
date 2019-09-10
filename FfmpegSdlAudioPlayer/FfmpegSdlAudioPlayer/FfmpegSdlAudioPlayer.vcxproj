@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AudioPlayerFFmpegSDL.cpp" />
+    <ClCompile Include="simplest_audio_play_sdl2.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{41E24DE7-FD1E-469C-8F96-B4BF4F079A93}</ProjectGuid>

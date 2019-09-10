@@ -100,6 +100,7 @@ private:
 			return -1;
 		}
 
+		//AVFormatContext的interrupt_callback必须被传递给vio_open2() 当被用于打开文件时
 		ret=avio_open2(&output_formatctx->pb,dst_path.c_str(), AVIO_FLAG_WRITE, 
 			&output_formatctx->interrupt_callback,nullptr);
 		if (ret < 0)
@@ -121,14 +122,13 @@ private:
 		st->codecpar->codec_id = av_guess_codec(output_formatctx->oformat,
 			nullptr, output_formatctx->url,nullptr,st->codecpar->codec_type);
 		output_encodec = avcodec_find_encoder(st->codecpar->codec_id);
-		output_encodecctx = avcodec_alloc_context3(output_encodec);
+		output_encodecctx = avcodec_alloc_context3(output_encodec);  
 		if (output_encodecctx == nullptr)
 		{
 			cout << "Failed to call avcodec_alloc_context3" << endl;
 			return -1;
 		}
-		output_encodecctx->codec_id = st->codecpar->codec_id;
-		output_encodecctx->codec_type = st->codecpar->codec_type;
+		//调用avcodec_alloc_context3(output_encodec)后output_encodecctx->codec_id和output_encodecctx->codec_type已被自动设置
 
 		//设置编码的时间基timebase，可设为任意值，不影响生成的srt文件内容
 		output_encodecctx->time_base = AVRational{ 1, 100000 };

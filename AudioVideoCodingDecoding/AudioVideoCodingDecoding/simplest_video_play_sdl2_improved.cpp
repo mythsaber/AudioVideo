@@ -6,6 +6,7 @@
 #include<vector>
 #include<SDL.h>
 #include<SDL_version.h>
+#include<atomic>
 using std::cout;
 using std::endl;
 
@@ -20,27 +21,34 @@ const uint32_t REFRESH_USEREVENT = SDL_USEREVENT + 1;
 //break event
 const uint32_t BREAK_USEREVENT = SDL_USEREVENT + 2;
 
-int thread_exit = 0;  //叉掉窗口时设置为1，辅助程序退出
+std::atomic<bool> thread_exit(false);  //叉掉窗口时设置为1，辅助程序退出
 const int normal_speed = 40;
 const int fast_forword_speed = 5;
 int delaytime = normal_speed;
+
 int refresh_video(void*)//线程的入口函数，必须是int(void*)类型
 {
-	while (thread_exit == 0)
+	while (thread_exit == false)
 	{
 		SDL_Event event;
 		event.type = REFRESH_USEREVENT;
-		SDL_PushEvent(&event); //SDl_PushEvent不会引起阻塞吧？
+		SDL_PushEvent(&event); //SDl_PushEvent不会引起阻塞
 		SDL_Delay(delaytime);
 		//SDL_PumpEvents();
 	}
-	
-	//break
+
 	SDL_Event event;
 	event.type = BREAK_USEREVENT;
 	SDL_PushEvent(&event);
 	return 0;
 }
+
+enum PlayState
+{
+	VSTATE_NORMAL,
+	VSTATE_PAUSE,
+	VSTATE_FASTFORWARD
+};
 
 int main(int argc, char* agv[])
 {
@@ -48,9 +56,12 @@ int main(int argc, char* agv[])
 		<< SDL_MINOR_VERSION << "." << SDL_PATCHLEVEL << endl;
 	cout << "---------------------------------------" << endl;
 
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+	int ret = 0;
+	ret = SDL_Init(SDL_INIT_VIDEO);
+	if ( ret!= 0) {
 		cout << "Couldn' initialize SDL: " << SDL_GetError << endl;
-		return -1;
+		SDL_Quit();
+		return ret;
 	}
 
 	//SDL_CreateWindow的第二三个参数为窗口在电脑屏幕上
@@ -59,11 +70,11 @@ int main(int argc, char* agv[])
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,  
 		wind_w, wind_h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	if (!wind) {
-		cout << "SDL: couldn't create window " 
-			<< SDL_GetError() << endl;
-		return -1;
+		cout << "SDL: couldn't create window " << SDL_GetError() << endl;
+		ret = -1;
+		SDL_Quit();
+		return ret;
 	}
-
 	SDL_Renderer* render = SDL_CreateRenderer(wind,-1,0);
 
 	//IYUV: Y + U + V  (3 planes)
@@ -78,13 +89,7 @@ int main(int argc, char* agv[])
 	SDL_CreateThread(refresh_video, nullptr,nullptr);
 	//主线程先于子线程结束，会如何？
 
-	enum VideoPlayState
-	{
-		VSTATE_NORMAL,
-		VSTATE_PAUSE,
-		VSTATE_FASTFORWARD
-	};
-	VideoPlayState videostate = VSTATE_NORMAL;
+	PlayState videostate = VSTATE_NORMAL;
 	bool space_down_state = false;  //空格键是否处于按下状态
 	SDL_Event event;
 	while (1)
@@ -96,7 +101,7 @@ int main(int argc, char* agv[])
 		}
 		else if (event.type == SDL_QUIT)  //叉掉窗口事件
 		{
-			thread_exit = 1;
+			thread_exit = true;
 		}
 		else if (event.type == BREAK_USEREVENT) 
 		{
@@ -184,7 +189,10 @@ int main(int argc, char* agv[])
 			SDL_RenderPresent(render);
 		}
 	}
-	
-	SDL_Quit();
+
+	SDL_DestroyTexture(texture);
+	SDL_DestroyRenderer(render);
+	SDL_DestroyWindow(wind);
+	SDL_Quit();	
 	return 0;
 }

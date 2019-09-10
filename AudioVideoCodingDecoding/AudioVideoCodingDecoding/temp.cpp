@@ -1,5 +1,9 @@
 #include<iostream>
-using namespace std;
+#include<chrono>
+#include<ctime>
+#include<iomanip>
+using std::cout;
+using std::endl;
 
 extern "C"
 {
@@ -8,30 +12,68 @@ extern "C"
 #include<libavutil/avutil.h>
 }
 
+struct TimeParam {
+	time_t last_timepoint;
+	int64_t ms_threshold;  //超时设置，以ms为单位
+};
+static void show_time(const time_t& t) {
+	tm temp;
+	localtime_s(&temp, &t);
+	cout << std::put_time(&temp, "%x %X\n");
+}
+static int my_callback(void* param) //超时，则中断阻塞  
+{
+	time_t cur_time = time(nullptr);
+	cout << "when call, time is: "; show_time(cur_time);
+	TimeParam* tp = (TimeParam*)(param);
+	cout << "delta time is (s): " << cur_time - tp->last_timepoint << endl;
+	if (cur_time - tp->last_timepoint > tp->ms_threshold) {
+		return 1;
+	}
+	return 0;
+}
 int main()
 {
-	auto show = [](const AVRational& x) {printf("(%d / %d)\n",x.num,x.den); };
-	AVRational a = {2,3};
-	AVRational b = { 1,2 };
-	cout << av_q2d(a) << endl; //0.666667
-	show(av_add_q(a,b));  // (7 / 6)
-	show(av_sub_q(a, b)); // (1 / 6)
-	show(av_mul_q(a, b)); // (1 / 3)
-	show(av_div_q(a, b)); // (4 / 3)
+	const char* url = "http://10.210.63.11:7777/videos/焰灵姬.mp4";
+	//如果ip或port出错，则阻塞  
+	//如果ip和port正确，但访问的文件不存在，则avformat_open_input直接返回错误  
+	AVFormatContext* fmtctx = avformat_alloc_context();
+	TimeParam tp;
+	fmtctx->interrupt_callback.callback = my_callback;
+	fmtctx->interrupt_callback.opaque = &tp;  //回调函数的参数
+	((TimeParam*)(fmtctx->interrupt_callback.opaque))->ms_threshold = 2;//超时阈值设置为2s 
+	((TimeParam*)(fmtctx->interrupt_callback.opaque))->last_timepoint = time(nullptr); //调用之前初始化时间
+	cout << "before call, time is: "; show_time(tp.last_timepoint);
+	int ret = avformat_open_input(&fmtctx, url, nullptr, nullptr);
+	if (ret < 0) {
+		cout << "Failed to call avformat_open_input" << endl;
+		goto error;
+	}
+	else {
+		cout << "succeed in calling avformat_open_input" << endl;
+	}
 
-
-	const char* url = "端木蓉.mp4";
-	//const char* url = "Titanic_10s.ts";
-	AVFormatContext* pfmtctx = nullptr;
-	pfmtctx=avformat_alloc_context();
-	int ret=avformat_open_input(&pfmtctx,url,nullptr,nullptr);
+	cout << "------avformat_find_stream_info start-------" << endl;
+	ret = avformat_find_stream_info(fmtctx, nullptr);
 	if (ret < 0)
 		goto error;
-	ret = avformat_find_stream_info(pfmtctx,nullptr);
-	if (ret < 0)
-		goto error;
+	cout << "------avformat_find_stream_info end-------" << endl;
 
+	AVPacket pkt;
+	av_init_packet(&pkt);
+	pkt.data = nullptr;
+	pkt.size = 0;
+	((TimeParam*)(fmtctx->interrupt_callback.opaque))->ms_threshold = 2;//超时阈值设置为2s
+	((TimeParam*)(fmtctx->interrupt_callback.opaque))->last_timepoint = time(nullptr);;  //调用之前初始化时间
+	cout << "before call, time is: "; show_time(tp.last_timepoint);
+	if (av_read_frame(fmtctx, &pkt) < 0)
+	{
+		cout << "Failed to call av_read_frame" << endl;
+		goto error;
+	}
+	else
+		cout << "succeed in calling av_read_frame" << endl;
 error:
-	avformat_close_input(&pfmtctx);
+	avformat_close_input(&fmtctx);
 	return 0;
 }
