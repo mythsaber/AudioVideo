@@ -85,10 +85,10 @@ int main(int argc, char* argv[])
 	}
 
     //创建AVFilterContext结构体，存储input与output的Filter信息
-	const AVFilter* buffersrc = avfilter_get_by_name("buffer");
+	const AVFilter* buffer = avfilter_get_by_name("buffer");
 	const AVFilter* buffersink = avfilter_get_by_name("buffersink");
 	AVFilterContext* buffersink_ctx;
-	AVFilterContext* buffersrc_ctx;
+	AVFilterContext* buffer_ctx;
 	constexpr int size = 1024;
 	char args[size];
 	snprintf(args,size,"video_size=%dx%d:pix_fmt=%d:time_base=%d/%d:\
@@ -97,14 +97,15 @@ codecctx->pix_fmt,
 fmtctx->streams[idx]->time_base.num, fmtctx->streams[idx]->time_base.den,
 codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 	AVFilterGraph* filter_graph = avfilter_graph_alloc();
-	ret = avfilter_graph_create_filter(&buffersrc_ctx,buffersrc,"in",
+	ret = avfilter_graph_create_filter(&buffer_ctx,buffer,"in",
 		args,nullptr,filter_graph);
+	//"in"表示buffer在整个Graph中叫做'in'。 名称可以随便叫，只要保证唯一不重复就好。
 	if (ret < 0)
 	{
 		avformat_close_input(&fmtctx);
 		avcodec_close(codecctx);
 		avcodec_free_context(&codecctx);
-		avfilter_free(buffersrc_ctx);
+		avfilter_free(buffer_ctx);
 		avfilter_graph_free(&filter_graph);
 		cout << "Failed to call vfilter_graph_create_filter in" << endl;
 		return -1;
@@ -117,7 +118,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 		avformat_close_input(&fmtctx);
 		avcodec_close(codecctx);
 		avcodec_free_context(&codecctx);
-		avfilter_free(buffersrc_ctx);
+		avfilter_free(buffer_ctx);
 		avfilter_free(buffersink_ctx);
 		avfilter_graph_free(&filter_graph);
 		cout << "Failed to call vfilter_graph_create_filter out" << endl;
@@ -135,15 +136,12 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 		avformat_close_input(&fmtctx);
 		avcodec_close(codecctx);
 		avcodec_free_context(&codecctx);
-		avfilter_free(buffersrc_ctx);
+		avfilter_free(buffer_ctx);
 		avfilter_free(buffersink_ctx);
 		avfilter_graph_free(&filter_graph);
 		cout << "Failed to call av_opt_set_int_list" << endl;
 		return -1;
 	}
-
-	AVFilterInOut* outputs = avfilter_inout_alloc();
-	AVFilterInOut* inputs = avfilter_inout_alloc();
 
 	/*
 	* The buffer source output must be connected to the input pad of
@@ -151,8 +149,9 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 	* filter input label is not specified, it is set to "in" by
 	* default.
 	*/
+	AVFilterInOut* outputs = avfilter_inout_alloc();
 	outputs->name = av_strdup("in");
-	outputs->filter_ctx = buffersrc_ctx;
+	outputs->filter_ctx = buffer_ctx;
 	outputs->pad_idx = 0;
 	outputs->next = nullptr;
 
@@ -162,6 +161,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 	* filter output label is not specified, it is set to "out" by
 	* default.
 	*/
+	AVFilterInOut* inputs = avfilter_inout_alloc();
 	inputs->name = av_strdup("out");
 	inputs->filter_ctx = buffersink_ctx;
 	inputs->pad_idx = 0;
@@ -177,7 +177,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 		avformat_close_input(&fmtctx);
 		avcodec_close(codecctx);
 		avcodec_free_context(&codecctx);
-		avfilter_free(buffersrc_ctx);
+		avfilter_free(buffer_ctx);
 		avfilter_free(buffersink_ctx);
 		avfilter_graph_free(&filter_graph);
 		avfilter_inout_free(&inputs);
@@ -193,7 +193,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 		avformat_close_input(&fmtctx);
 		avcodec_close(codecctx);
 		avcodec_free_context(&codecctx);
-		avfilter_free(buffersrc_ctx);
+		avfilter_free(buffer_ctx);
 		avfilter_free(buffersink_ctx);
 		avfilter_graph_free(&filter_graph);
 		avfilter_inout_free(&inputs);
@@ -213,6 +213,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 	const std::string dstpath_yuv = "output_" +
 		std::to_string(codecctx->width) +
 		"x" + std::to_string(codecctx->height) + ".yuv";
+	cout << "输出" << dstpath_yuv << endl;
 	std::ofstream ofs_yuv(dstpath_yuv, std::ios::binary);
 
 	while (av_read_frame(fmtctx, &packet) == 0)
@@ -236,7 +237,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 			avformat_close_input(&fmtctx);
 			avcodec_close(codecctx);
 			avcodec_free_context(&codecctx);
-			avfilter_free(buffersrc_ctx);
+			avfilter_free(buffer_ctx);
 			avfilter_free(buffersink_ctx);
 			avfilter_graph_free(&filter_graph);
 			av_frame_free(&frame);
@@ -260,7 +261,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 				avformat_close_input(&fmtctx);
 				avcodec_close(codecctx);
 				avcodec_free_context(&codecctx);
-				avfilter_free(buffersrc_ctx);
+				avfilter_free(buffer_ctx);
 				avfilter_free(buffersink_ctx);
 				avfilter_graph_free(&filter_graph);
 				av_frame_free(&frame);
@@ -272,14 +273,14 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 			}
 
 			//-----------------------------------滤镜处理-----------------------------------
-			/* push the decoded frame into the filtergraph */
-			ret = av_buffersrc_add_frame_flags(buffersrc_ctx, frame, AV_BUFFERSRC_FLAG_KEEP_REF) < 0;
+			/* push the decoded frame into the filtergraph 向Filter Graph加入一帧数据*/
+			ret = av_buffersrc_add_frame_flags(buffer_ctx, frame, AV_BUFFERSRC_FLAG_KEEP_REF) < 0;
 			if (ret < 0)
 			{
 				avformat_close_input(&fmtctx);
 				avcodec_close(codecctx);
 				avcodec_free_context(&codecctx);
-				avfilter_free(buffersrc_ctx);
+				avfilter_free(buffer_ctx);
 				avfilter_free(buffersink_ctx);
 				avfilter_graph_free(&filter_graph);
 				av_frame_free(&frame);
@@ -290,7 +291,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 			}
 			while (1)
 			{
-				/* pull filtered frames from the filtergraph */
+				/* pull filtered frames from the filtergraph 从Filter Graph取出一帧数据*/
 				ret = av_buffersink_get_frame(buffersink_ctx, filt_frame);
 				if (ret >= 0)
 					;
@@ -303,7 +304,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 					avformat_close_input(&fmtctx);
 					avcodec_close(codecctx);
 					avcodec_free_context(&codecctx);
-					avfilter_free(buffersrc_ctx);
+					avfilter_free(buffer_ctx);
 					avfilter_free(buffersink_ctx);
 					avfilter_graph_free(&filter_graph);
 					av_frame_free(&frame);
@@ -337,7 +338,7 @@ codecctx->sample_aspect_ratio.num,codecctx->sample_aspect_ratio.den);
 	avformat_close_input(&fmtctx);
 	avcodec_close(codecctx);//Close a given AVCodecContext and free all the data associated with it*(but not the AVCodecContext itself).
 	avcodec_free_context(&codecctx);
-	avfilter_free(buffersrc_ctx);
+	avfilter_free(buffer_ctx);
 	avfilter_free(buffersink_ctx);
 	avfilter_graph_free(&filter_graph);
 	av_frame_free(&frame);

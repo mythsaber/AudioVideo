@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="decode_encode_subtitle.cpp">
+    <ClCompile Include="filter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

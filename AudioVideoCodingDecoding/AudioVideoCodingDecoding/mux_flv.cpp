@@ -120,6 +120,16 @@ int mux_flv_h264()
 		avformat_free_context(output_fmtctx);
 		return -1;
 	}
+
+	//遍历AVDictionary，AVStream::metadata
+	AVDictionaryEntry* item = nullptr;
+	printf("video stream's metadata is:\n");
+	while (item = av_dict_get(reader.get_stream()->metadata, "", item, AV_DICT_IGNORE_SUFFIX))
+	{
+		printf("(%s: %s)\n",item->key,item->value); //(language: und)、(handler_name: VideoByEZMediaEditor)
+	}
+	printf("\n");
+
 	av_dict_copy(&st->metadata, reader.get_stream()->metadata, AV_DICT_DONT_OVERWRITE);
 
 	//Method 1，手动设置输出流的codecpar
@@ -169,7 +179,7 @@ int mux_flv_h264()
 											  //avc1是无起始码的，AV_CODEC_ID_H264是带起始码的
 	};
 
-	set_codecpar_method2(); //set_codecpar_method1()亦可
+	set_codecpar_method1(); //set_codecpar_method1()、set_codecpar_method2()亦可
 
 	ret = avformat_write_header(output_fmtctx, nullptr);
 	if (ret < 0)

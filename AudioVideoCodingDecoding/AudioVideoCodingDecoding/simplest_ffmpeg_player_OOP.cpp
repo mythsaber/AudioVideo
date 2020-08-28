@@ -1,14 +1,4 @@
-﻿extern "C"
-{
-#include<libavformat/avformat.h>
-#include<libavcodec/avcodec.h>
-#include<libavutil/avutil.h>
-#include<libswscale/swscale.h>
-#include<libavutil/imgutils.h>
-}
-#include<SDL.h>
-
-#include<cstdio>
+﻿#include<cstdio>
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -19,6 +9,43 @@
 #include<deque>
 #include<vector>
 #include<atomic>
+extern "C"
+{
+#include<libavformat/avformat.h>
+#include<libavcodec/avcodec.h>
+#include<libavutil/avutil.h>
+#include<libswscale/swscale.h>
+#include<libavutil/imgutils.h>
+}
+
+//#include<SDL.h>
+//#pragma comment(lib,"D:/ffmpeg-dev/lib/avcodec.lib")
+//#pragma comment(lib,"D:/ffmpeg-dev/lib/avdevice.lib")
+//#pragma comment(lib,"D:/ffmpeg-dev/lib/avfilter.lib")
+//#pragma comment(lib,"D:/ffmpeg-dev/lib/avformat.lib")
+//#pragma comment(lib,"D:/ffmpeg-dev/lib/avutil.lib")
+//#pragma comment(lib,"D:/ffmpeg-dev/lib/postproc.lib")
+//#pragma comment(lib,"D:/ffmpeg-dev/lib/swresample.lib")
+//#pragma comment(lib,"D:/ffmpeg-dev/lib/swscale.lib")
+
+//#pragma comment(lib,"D:/SDL2/lib/x64/SDL2.lib")
+//#pragma comment(lib,"D:/SDL2/lib/x64/SDL2main.lib")
+//#pragma comment(lib,"D:/SDL2/lib/x64/SDL2test.lib")
+
+
+#pragma comment(lib,"D:/SDL2/lib/x64/SDL2.lib")
+#pragma comment(lib,"D:/SDL2/lib/x64/SDL2main.lib")
+#pragma comment(lib,"D:/SDL2/lib/x64/SDL2test.lib")
+#include<D:/SDL2/include/SDL.h>
+#pragma comment(lib,"D:/shiftmedia/msvc/lib/x64/libavcodecd.lib")
+//#pragma comment(lib,"D:/shiftmedia/msvc/lib/x64/libavdeviced.lib")  //使用ffmpegd必须屏蔽该静态库，否则与SDL冲突
+#pragma comment(lib,"D:/shiftmedia/msvc/lib/x64/libavfilterd.lib")
+#pragma comment(lib,"D:/shiftmedia/msvc/lib/x64/libavformatd.lib")
+#pragma comment(lib,"D:/shiftmedia/msvc/lib/x64/libavutild.lib")
+#pragma comment(lib,"D:/shiftmedia/msvc/lib/x64/libpostprocd.lib")
+#pragma comment(lib,"D:/shiftmedia/msvc/lib/x64/libswresampled.lib")
+#pragma comment(lib,"D:/shiftmedia/msvc/lib/x64/libswscaled.lib")
+
 using std::vector;
 using std::deque;
 using std::string;
@@ -111,10 +138,10 @@ public:
 	}
 	void output(unsigned char* buffer, int buffersize) const
 	{
-		assert(buffersize >= w*h * 3 / 2);
+		assert(buffersize >= w * h * 3 / 2);
 		memcpy(buffer, (char*)&data[0][0], w*h);
-		memcpy(buffer + w*h, (char*)&data[1][0], w*h / 4);
-		memcpy(buffer + w*h * 5 / 4, (char*)&data[2][0], w*h / 4);
+		memcpy(buffer + w * h, (char*)&data[1][0], w*h / 4);
+		memcpy(buffer + w * h * 5 / 4, (char*)&data[2][0], w*h / 4);
 	}
 };
 
@@ -122,7 +149,7 @@ class VideoDecoder
 {
 public:
 	VideoDecoder(const string& path) :
-		filepath(path), dst_pixfmt(AV_PIX_FMT_YUV420P),frameidx(0)
+		filepath(path), dst_pixfmt(AV_PIX_FMT_YUV420P), frameidx(0)
 	{
 		init();
 	}
@@ -136,7 +163,7 @@ public:
 		avcodec_close(codecctx);
 		avformat_close_input(&formatctx);
 	}
-	
+
 	FrameDataYuv420p next_frame()
 	{
 		while (1)
@@ -160,8 +187,8 @@ public:
 				exit(-1);
 			}
 
-			int errorcode= avcodec_receive_frame(codecctx, frame);
-			if (errorcode== 0)
+			int errorcode = avcodec_receive_frame(codecctx, frame);
+			if (errorcode == 0)
 			{
 				break;
 			}
@@ -194,18 +221,18 @@ public:
 
 		return fd;
 	}
-	
+
 	static void decode(const string& src_url, const string& dst_url)
 	{
-		std::ofstream ofs(dst_url,std::ios::binary);
+		std::ofstream ofs(dst_url, std::ios::binary);
 		VideoDecoder decoder(src_url);
 		FrameDataYuv420p temp;
 		vector<unsigned char> data(decoder.get_width()*
 			decoder.get_height() * 3 / 2);
-		while (!(temp=decoder.next_frame()).empty())
+		while (!(temp = decoder.next_frame()).empty())
 		{
-			temp.output(&data[0],(int)data.size());
-			ofs.write((char*)&data[0],data.size());
+			temp.output(&data[0], (int)data.size());
+			ofs.write((char*)&data[0], data.size());
 		}
 	}
 
@@ -323,9 +350,9 @@ private:
 public:
 	SdlVideoPlayer(int frame_width_, int frame_height_, int fps_) :
 		frame_width(frame_width_), frame_height(frame_height_),
-		fps(fps_), close_wind(false),videostate(VSTATE_NORMAL),
-		space_down_state(false),normal_delay(1000/fps_),
-		fast_forword_delay(1000/fps_/10),
+		fps(fps_), close_wind(false), videostate(VSTATE_NORMAL),
+		space_down_state(false), normal_delay(1000 / fps_),
+		fast_forword_delay(1000 / fps_ / 10),
 		REFRESH_USEREVENT(SDL_USEREVENT + 1)
 	{
 		delaytime = normal_delay;
@@ -341,7 +368,7 @@ public:
 	void imshow_frame(const FrameDataYuv420p& fd)
 	{
 		SDL_Event event;
-		SDL_WaitEvent(&event); 
+		SDL_WaitEvent(&event);
 
 		while (event.type != REFRESH_USEREVENT
 			|| videostate == VSTATE_PAUSE)
@@ -350,7 +377,7 @@ public:
 			{
 				SDL_GetWindowSize(wind, &wind_w, &wind_h);
 			}
-			else if (event.type == SDL_QUIT) 
+			else if (event.type == SDL_QUIT)
 			{
 				close_wind = true;
 				return;
@@ -433,11 +460,11 @@ public:
 	bool get_close_wind() const { return (bool)close_wind; }
 	void set_close_wind(bool bl) { close_wind = bl; }
 
-	static void play_yuv420p(const string& src_path,int width,
-		int height,int fps=25)
+	static void play_yuv420p(const string& src_path, int width,
+		int height, int fps = 25)
 	{
 		std::ifstream ifs(src_path, std::ios::binary);
-		SdlVideoPlayer player(width,height,fps);
+		SdlVideoPlayer player(width, height, fps);
 		vector<unsigned char> buffer(width*height * 3 / 2);
 		while (1)
 		{
@@ -453,7 +480,7 @@ public:
 				ifs.read((char*)&buffer[0], buffer.size());
 				assert(ifs.gcount() == buffer.size());
 			}
-			FrameDataYuv420p fdata(width,height);
+			FrameDataYuv420p fdata(width, height);
 			fdata.store(&buffer[0], &buffer[width*height],
 				&buffer[width*height * 5 / 4]);
 			player.imshow_frame(fdata);
@@ -492,7 +519,7 @@ private:
 		texture = SDL_CreateTexture(render, pixfmt,
 			SDL_TEXTUREACCESS_STREAMING, frame_width, frame_height);
 
-		refresh_thd=thread(&SdlVideoPlayer::refresh_video, this);
+		refresh_thd = thread(&SdlVideoPlayer::refresh_video, this);
 
 		cout << "SdlVideoPlayer init Done" << endl;
 	}
@@ -510,7 +537,7 @@ private:
 	const int frame_width;
 	const int frame_height;
 	const int fps;
-	
+
 	const uint32_t REFRESH_USEREVENT;
 	const int normal_delay;
 	const int fast_forword_delay;
@@ -530,7 +557,7 @@ private:
 class DecoderPlayer
 {
 public:
-	DecoderPlayer(const string& path, int deque_maxsize=30) :
+	DecoderPlayer(const string& path, int deque_maxsize = 30) :
 		decoder(path),
 		mydeque(deque_maxsize)
 	{
@@ -542,7 +569,7 @@ public:
 	{
 		SdlVideoPlayer player(frame_width, frame_height, fps);
 
-		auto lam = [this,&player]()
+		auto lam = [this, &player]()
 		{
 			FrameDataYuv420p data;
 			while (1)
@@ -567,7 +594,7 @@ public:
 			}
 
 			std::shared_ptr<FrameDataYuv420p> dataget;
-			dataget= mydeque.pop();
+			dataget = mydeque.pop();
 
 			if (dataget->empty())
 			{
@@ -588,9 +615,9 @@ private:
 	int fps;
 };
 
-int main(int argc,char* argv[])
+int main(int argc, char* argv[])
 {
-	DecoderPlayer dp("端木蓉_640x360.mp4");
+	DecoderPlayer dp("E:\\GitHub\\AudioVideo\\AudioVideoCodingDecoding\\AudioVideoCodingDecoding\\端木蓉_640x360.mp4");
 	dp.decode_play();
 
 	return 0;

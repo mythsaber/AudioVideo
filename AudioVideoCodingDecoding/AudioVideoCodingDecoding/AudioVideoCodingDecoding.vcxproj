@@ -18,6 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="simplest_ffmpeg_player_OOP.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EB18574F-917C-41B7-9441-55371823B8F5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
