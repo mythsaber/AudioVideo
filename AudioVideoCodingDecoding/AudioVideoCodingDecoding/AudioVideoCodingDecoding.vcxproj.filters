@@ -15,7 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="simplest_ffmpeg_player_OOP.cpp">
+    <ClCompile Include="VideoFadeFilter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ResampleAVFilter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

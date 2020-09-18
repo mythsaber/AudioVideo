@@ -158,6 +158,7 @@ public:
 		av_free(outbuffer);
 		sws_freeContext(swsctx);
 		av_packet_free(&packet); //等价于av_packet_unref(packet)+av_freep(packet)
+		av_frame_unref(frameyuv);
 		av_frame_free(&frameyuv);
 		av_frame_free(&frame);
 		avcodec_close(codecctx);
@@ -206,6 +207,8 @@ public:
 				exit(-1);
 			}
 		}
+
+		AVFrame* temp = av_frame_clone(frame);
 
 		sws_scale(swsctx, (const uint8_t* const*)frame->data,
 			frame->linesize, 0, codecctx->height,
@@ -311,7 +314,7 @@ private:
 			codecctx->width, codecctx->height, 1);
 		outbuffer = (uint8_t*)av_malloc(buffesize);
 
-		av_image_fill_arrays(frameyuv->data, frameyuv->linesize, outbuffer,
+		int ret = av_image_fill_arrays(frameyuv->data, frameyuv->linesize, outbuffer,
 			dst_pixfmt, codecctx->width, codecctx->height, 1);
 
 		packet = av_packet_alloc();

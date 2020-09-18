@@ -19,7 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="simplest_ffmpeg_player_OOP.cpp" />
+    <ClCompile Include="ResampleAVFilter.cpp" />
+    <ClCompile Include="VideoFadeFilter.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EB18574F-917C-41B7-9441-55371823B8F5}</ProjectGuid>
