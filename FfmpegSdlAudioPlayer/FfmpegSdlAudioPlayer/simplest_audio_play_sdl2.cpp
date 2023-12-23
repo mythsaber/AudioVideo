@@ -91,11 +91,7 @@ static void fill_audio(void* udata, uint8_t* stream, int len)
         eof = true;
         return;
     }
-#if OLD_FUNC_CALL
-    SDL_MixAudio(stream, buf, actual_size, SDL_MIX_MAXVOLUME);
-#else
     SDL_MixAudioFormat(stream, buf, AUDIO_S16SYS, actual_size, SDL_MIX_MAXVOLUME);
-#endif
     data_cnt += actual_size;
     cout << "len  actual read: " << actual_size << endl;
     printf("Now playing %10llu Bytes data\n", data_cnt);
@@ -106,10 +102,10 @@ int play_pcm()
     printf("---------------SDL:%d.%d.%d----------------\n",
         SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL);
 
-    //const char* src = "NocturneNo2inEflat_44.1k_s16le.pcm";
-    const char* src = "夏日水韵_44.1k_s16le.pcm";
+    const char* src = "NocturneNo2inEflat_44.1k_s16le.pcm";
+    //const char* src = "夏日水韵_44.1k_s16le.pcm";
 
-    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER))
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO))
     {
         printf("Couldn't init SDL - %s\n", SDL_GetError());
         return -1;
@@ -147,25 +143,28 @@ int play_pcm()
     //第二个参数是nullptr，则传递给回调函数的数据自动转为硬件要求的格式
     //如果第二个参数为&obtained，则SDL_OpenAudio不会改变第一个参数的成员
     //如果第二个参数为nullptr，则SDL_OpenAudio会计算size的值，并填入第一个参数中
-#if OLD_FUNC_CALL
-    if (SDL_OpenAudio(&wanted, nullptr) < 0)
-    {
-        printf("Couldn't open audio\n");
-        return -1;
-    }
-#else
     int capture = 0;
     int device_index = 0;
+#if defined(_WIN32)
     const char* device_name = SDL_GetAudioDeviceName(device_index, capture);
-    int audio_dev_id = SDL_OpenAudioDevice(device_name, capture, &wanted, &obtained, 0);
+    const int audio_dev_id = SDL_OpenAudioDevice(device_name, capture, &wanted, &obtained, 0);
     if (audio_dev_id == 0)
     {
         printf("Couldn't open audio dev: %s\n", device_name);
+        SDL_QuitSubSystem(SDL_INIT_AUDIO);
         return -1;
     }
     printf("success open audio device: %s\n", device_name);
+#else
+    const int audio_dev_id = SDL_OpenAudioDevice(nullptr, capture, &wanted, &obtained, 0);
+    if (audio_dev_id == 0)
+    {
+        printf("Couldn't open audio dev: %s\n", "default");
+        SDL_QuitSubSystem(SDL_INIT_AUDIO);
+        return -1;
+    }
+    printf("success open audio device: %s\n", "default");
 #endif
-
     //printf("wanted.callback:%p\n", wanted.callback);
     printf("wanted.freq:%d\n", wanted.freq);//44100
     printf("wanted.format:%x\n", wanted.format);  //8010
@@ -187,15 +186,12 @@ int play_pcm()
     if (ret < 0)
     {
         cout << "Failed to open " << src << endl;
-        SDL_Quit();
+        SDL_CloseAudioDevice(audio_dev_id);
+        SDL_QuitSubSystem(SDL_INIT_AUDIO);
         return -1;
     }
 
-#if OLD_FUNC_CALL
-    SDL_PauseAudio(0);
-#else
     SDL_PauseAudioDevice(audio_dev_id, 0);
-#endif
 
     while (1)
     {
@@ -204,13 +200,14 @@ int play_pcm()
         else
             SDL_Delay(1);
     }
-    SDL_Quit();
+    SDL_CloseAudioDevice(audio_dev_id);
+    SDL_QuitSubSystem(SDL_INIT_AUDIO);
     return 0;
 }
 
 void list_all_audio_out_devices()
 {
-    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER))
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO))
     {
         printf("Couldn't init SDL - %s\n", SDL_GetError());
         return;
@@ -223,13 +220,15 @@ void list_all_audio_out_devices()
         printf("%dth audio dev: %s\n", i, SDL_GetAudioDeviceName(i, capture));
     }
 
-    SDL_Quit();
+    SDL_QuitSubSystem(SDL_INIT_AUDIO);
     return;
 }
 
 int main(int argc, char* argv[])
 {
+#if defined(_WIN32)
     system("chcp 65001");
+#endif
     list_all_audio_out_devices();
     play_pcm();
     return 0;
